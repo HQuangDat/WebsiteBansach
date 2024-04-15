@@ -160,7 +160,8 @@
         })
         .then(response => {
             if (response.ok) {
-                window.location.href = '/thank';
+              localStorage.removeItem('cartItems');
+              window.location.href = '/thank';
             } else {
                 console.error('Error:', response.statusText);
             }
