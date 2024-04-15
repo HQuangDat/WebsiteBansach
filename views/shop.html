@@ -41,10 +41,6 @@
 							<a class="nav-link" href="/">Home</a>
 						</li>
 						<li class="active"><a class="nav-link" href="/shop">Shop</a></li>
-						<li><a class="nav-link" href="about.html">About us</a></li>
-						<li><a class="nav-link" href="services.html">Services</a></li>
-						<li><a class="nav-link" href="blog.html">Blog</a></li>
-						<li><a class="nav-link" href="contact.html">Contact us</a></li>
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
@@ -143,7 +139,6 @@
 				<div class="border-top copyright">
 					<div class="row pt-4">
 						<div class="col-lg-6">
-							<p class="mb-2 text-center text-lg-start">Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by <a href="https://untree.co">Untree.co</a>  Distributed By <a href="https://themewagon.com">ThemeWagon</a> <!-- License information: https://untree.co/license/ -->
             </p>
 						</div>
 
@@ -172,7 +167,7 @@
 					.then(response => response.json())
 					.then(data => {
 						if (data.loggedIn) {
-							addToCart(bookName, price, cover, bookId);
+							addToCart(bookId, bookName, price, cover); // Sửa lại tham số truyền vào hàm addToCart
 						} else {
 							window.location.href = '/login';
 						}
@@ -183,16 +178,31 @@
 			}
 		
 			// Function to add item to cart
-			function addToCart(bookName, price, cover, bookId) {
+			function addToCart(bookId, bookName, price, cover) {
 				const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-				const existingItemIndex = cartItems.findIndex(item => item.bookName === bookName);
-				if (existingItemIndex !== -1) {
-					cartItems[existingItemIndex].quantity++;
+				const existingItem = cartItems.find(item => item.bookId === bookId);
+
+				if (existingItem) {
+					existingItem.quantity++;
 				} else {
-					cartItems.push({ bookName, price, quantity: 1, cover, bookId }); // Include bookId here
+					const newItem = {
+						bookId: bookId,
+						bookName: bookName,
+						price: price,
+						cover: cover,
+						quantity: 1
+					};
+					cartItems.push(newItem);
 				}
+
 				localStorage.setItem('cartItems', JSON.stringify(cartItems));
 				alert('Item added to cart');
+
+				// Update cart page if currently on cart page
+				if (window.location.pathname === '/cart.html') {
+					// Refresh the cart page
+					location.reload();
+				}
 			}
 		
 			// Fetch books and display them

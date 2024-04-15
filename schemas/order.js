@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
     books: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
-        required: true
+        // required: true
     }],
     shipping_address: {
         type: String,

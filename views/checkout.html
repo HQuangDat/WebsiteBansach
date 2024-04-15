@@ -41,7 +41,8 @@
           <li><a class="nav-link" href="contact.html">Contact us</a></li>
         </ul>
 
-        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu" data-user-id="<%= user._id %>">
+        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
+
         </ul>
       </div>
     </div>
@@ -102,8 +103,7 @@
           </select>
         </div>
         <div class="col-md-12 mt-3">
-          <button id="checkoutButton" class="btn btn-black btn-lg py-3 btn-block">Proceed To Checkout</button>
-          <!-- Assign ID to the button for event handling -->
+          <button class="btn btn-black btn-lg py-3 btn-block" onclick="checkout()">Proceed To Checkout</button>
         </div>
       </div>
     </div>
@@ -119,48 +119,39 @@
       let totalOrderPrice = 0;
 
       cartItems.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td class="product-thumbnail"><img src="images/${item.cover}" class="img-fluid"></td>
-          <td class="product-name">${item.bookName}</td>
-          <td class="product-price">$${item.price.toFixed(2)}</td>
-          <td class="product-quantity">${item.quantity}</td>
-          <td class="product-total">$${(item.price * item.quantity).toFixed(2)}</td>
-        `;
-        cartItemsContainer.appendChild(row);
-        totalOrderPrice += item.price * item.quantity;
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td class="product-thumbnail"><img src="images/${item.cover}" class="img-fluid"></td>
+            <td class="product-name">${item.bookName}</td>
+            <td class="product-price">$${item.price.toFixed(2)}</td>
+            <td class="product-quantity">${item.quantity}</td>
+            <td class="product-total">$${(item.price * item.quantity).toFixed(2)}</td>
+          `;
+          cartItemsContainer.appendChild(row);
+          totalOrderPrice += item.price * item.quantity;
       });
 
       document.getElementById('totalOrderPrice').innerText = `$${totalOrderPrice.toFixed(2)}`;
-
-      const userId = document.getElementById('userMenu').getAttribute('data-user-id');
-
-      function checkout() {
-    const userId = document.getElementById('userMenu').getAttribute('data-user-id');
-    
-    const shippingAddress = document.getElementById('shippingAddress').value;
-    const paymentMethod = document.getElementById('paymentMethod').value;
-
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-
-    // Calculate total price
-    let totalPrice = 0;
-    cartItems.forEach(item => {
-        totalPrice += item.price * item.quantity;
     });
 
-    // Construct the data object to be sent to the server
-    const data = {
-        user: userId,
-        books: cartItems.map(item => item.bookId),
-        shipping_address: shippingAddress,
-        total_price: totalPrice,
-        payment_method: paymentMethod,
-        order_status: 'pending' // Default order status
-    };
+    function checkout() {
+        const shippingAddress = document.getElementById('shippingAddress').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-    // Make a POST request to the server to create the order
-    fetch('/checkout', {
+        // Tính tổng giá trị của các cuốn sách trong giỏ hàng
+        let totalPrice = cartItems.reduce((total, item) => {
+            return total + item.price * item.quantity;
+        }, 0);
+
+        const data = {
+            shippingAddress: shippingAddress,
+            paymentMethod: paymentMethod,
+            cartItems: cartItems,
+            total_price: totalPrice
+        };
+
+        fetch('/checkout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -169,8 +160,8 @@
         })
         .then(response => {
             if (response.ok) {
-                // If the request is successful, redirect to the thank you page
-                window.location.href = '/thank';
+              localStorage.removeItem('cartItems');
+              window.location.href = '/thank';
             } else {
                 console.error('Error:', response.statusText);
             }
@@ -179,42 +170,36 @@
             console.error('Error:', error);
         });
     }
-
-
-
-      document.getElementById('checkoutButton').addEventListener('click', checkout);
-    });
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-                  fetch('/check_login')
-                      .then(response => response.json())
-                      .then(data => {
-                          const userMenu = document.getElementById('userMenu');
-                          if (data.loggedIn) {
-                              userMenu.innerHTML = `
-                                  <li class="nav-item dropdown">
-                                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                          <img src="images/user.svg">
-                                      </a>
-                                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                          <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                                          <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                                      </ul>
-                                  </li>
-                                  <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
-                              `;
-                          } else {
-                              userMenu.innerHTML = `
-                                  <li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
-                                  <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
-                              `;
-                          }
-                      })
-                      .catch(error => {
-                          console.error('Error checking login status:', error);
-                      });
-                  });
-  </script>
+  //Kiểm tra đăng nhập thanh nav
+  document.addEventListener("DOMContentLoaded", function() {
+    fetch('/check_login')
+      .then(response => response.json())
+      .then(data => {
+        const userMenu = document.getElementById('userMenu');
+        if (data.loggedIn) {
+          userMenu.innerHTML = `
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="images/user.svg">
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              </ul>
+            </li>
+            <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+          `;
+        } else {
+          userMenu.innerHTML = `
+            <li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+            <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+          `;
+        }
+      })
+      .catch(error => {
+        console.error('Error checking login status:', error);
+      });
+  });
+</script>
 </body>
 </html>
