@@ -20,7 +20,7 @@
 <body>
 
   <!-- Start Header/Navigation -->
-  <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+  <nav class="custom-navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
 
     <div class="container">
       <a class="navbar-brand" href="/">Furni<span>.</span></a>
@@ -95,7 +95,7 @@
         <div class="col-md-6">
           <div class="row mb-5">
             <div class="col-md-6 mb-3 mb-md-0">
-              <button class="btn btn-black btn-sm btn-block">Update Cart</button>
+              <button class="btn btn-black btn-sm btn-block" onclick="updateCart()">Update Cart</button>
             </div>
             <div class="col-md-6">
               <a href="/shop">
@@ -163,35 +163,34 @@
   <script src="javascripts/custom.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        const cartItemsContainer = document.getElementById('cartItems');
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const cartItemsContainer = document.getElementById('cartItems');
 
-        cartItems.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="product-thumbnail"><img src="images/${item.cover}" class="img-fluid"></td>
-                <td class="product-name">${item.bookName}</td>
-                <td class="product-price">$${item.price.toFixed(2)}</td>
-                <td class="product-quantity">${item.quantity}</td>
-                <td class="product-total">$${(item.price * item.quantity).toFixed(2)}</td>
-                <td class="product-remove">
-                    <button class="btn btn-sm btn-danger" onclick="removeFromCart('${item.bookId}'); return false;">Remove</button>
-                </td>
-            `;
-            cartItemsContainer.appendChild(row);
-        });
-
-        updateCartTotal();
+    cartItems.forEach(item => {
+        const row = document.createElement('tr');
+        const totalPrice = typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : 'N/A'; // Kiểm tra nếu giá tiền là số thì mới sử dụng toFixed()
+        row.innerHTML = `
+            <td class="product-thumbnail"><img src="images/${item.cover}" class="img-fluid"></td>
+            <td class="product-name">${item.bookName}</td>
+            <td class="product-price">${totalPrice}</td>
+            <td class="product-quantity">${item.quantity}</td>
+            <td class="product-total">$${(item.price * item.quantity).toFixed(2)}</td>
+            <td class="product-remove">
+                <button class="btn btn-sm btn-danger" onclick="removeFromCart('${item.bookId}'); return false;">Remove</button>
+            </td>
+        `;
+        cartItemsContainer.appendChild(row);
     });
+
+    updateCartTotal();
+});
 
     // Function to remove item from cart by book ID
     function removeFromCart(bookId) {
         let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-        // Find the index of the item with the specified book ID
         const itemIndex = cartItems.findIndex(item => item.bookId === bookId);
 
-        // Remove the item if found
         if (itemIndex !== -1) {
             cartItems.splice(itemIndex, 1);
             localStorage.setItem('cartItems', JSON.stringify(cartItems));

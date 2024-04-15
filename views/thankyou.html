@@ -14,7 +14,7 @@
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/stylesheets/all.min.css" rel="stylesheet">
 		<link href="stylesheets/tiny-slider.css" rel="stylesheet">
 		<link href="stylesheets/style.css" rel="stylesheet">
-		<title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
+		<title>Thank you for your order</title>
 	</head>
 
 	<body>
@@ -34,7 +34,7 @@
 						<li class="nav-item ">
 							<a class="nav-link" href="/">Home</a>
 						</li>
-						<li><a class="nav-link" href="shop.html">Shop</a></li>
+						<li><a class="nav-link" href="/shop">Shop</a></li>
 						<li><a class="nav-link" href="about.html">About us</a></li>
 						<li><a class="nav-link" href="services.html">Services</a></li>
 						<li><a class="nav-link" href="blog.html">Blog</a></li>
@@ -42,8 +42,7 @@
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="#"><img src="images/user.svg"></a></li>
-						<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+						
 					</ul>
 				</div>
 			</div>
@@ -192,6 +191,37 @@
 		<script src="javascripts/bootstrap.bundle.min.js"></script>
 		<script src="javascripts/tiny-slider.js"></script>
 		<script src="javascripts/custom.js"></script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				fetch('/check_login')
+					.then(response => response.json())
+					.then(data => {
+						const userMenu = document.getElementById('userMenu');
+							if (data.loggedIn) {
+								userMenu.innerHTML = `
+									<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									<img src="images/user.svg">
+									</a>
+									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+									<li><a class="dropdown-item" href="/profile">Profile</a></li>
+									<li><a class="dropdown-item" href="/logout">Logout</a></li>
+									</ul>
+									</li>
+									<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+									  `;
+							} else {
+									userMenu.innerHTML = `
+										<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+										<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+									`;
+							}
+							})
+					.catch(error => {
+						console.error('Error checking login status:', error);
+						});
+					});
+		  </script>
 	</body>
 
 </html>

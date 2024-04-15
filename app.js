@@ -230,7 +230,6 @@ mongoose.connect(uri)
     app.post('/checkout', (req, res) => {
       const { shippingAddress, paymentMethod, cartItems } = req.body;
     
-      // Check if the shippingAddress and cartItems are provided
       if (!shippingAddress || !cartItems || cartItems.length === 0) {
         return res.status(400).send('Shipping address and at least one book are required');
       }
@@ -276,6 +275,20 @@ mongoose.connect(uri)
       }
     });
 
+    // Xóa đơn hàng theo ID
+    app.delete('/delete_order/:id', async (req, res) => {
+      try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).send('Invalid order ID');
+        }
+        await Book.findByIdAndDelete(id);
+        res.status(200).send('Order deleted successfully');
+      } catch (error) {
+        console.error('Error deleting order:', error);
+        res.status(500).send('Failed to delete order');
+      }
+    });
 
     const PORT = process.env.PORT || 8000;
     app.listen(PORT, () => {
