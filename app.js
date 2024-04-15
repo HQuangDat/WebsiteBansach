@@ -38,6 +38,9 @@ mongoose.connect(uri)
       store: store,
     }));
 
+    app.get('/admin', authAdmin,(req, res) => {
+      res.sendFile(path.join(__dirname, 'views/adminview', 'admin.html'));
+    });
 
     app.get('/register', (req, res) => {
       res.sendFile(path.join(__dirname, 'views', 'register.html'));
@@ -67,16 +70,16 @@ mongoose.connect(uri)
       res.sendFile(path.join(__dirname, 'views', 'checkout.html'));
     });
 
-    app.get('/add_author', (req, res) => {
-      res.sendFile(path.join(__dirname, 'views', 'add_author.html'));
+    app.get('/add_author',authAdmin, (req, res) => {
+      res.sendFile(path.join(__dirname, 'views/adminview', 'add_author.html'));
     });
 
-    app.get('/add_category', (req, res) => {
-      res.sendFile(path.join(__dirname, 'views', 'add_category.html'));
+    app.get('/add_category',authAdmin, (req, res) => {
+      res.sendFile(path.join(__dirname, 'views/adminview', 'add_category.html'));
     });
 
-    app.get('/add_book',  async(req, res) => {
-      res.sendFile(path.join(__dirname, 'views', 'add_book.html'));
+    app.get('/add_book', authAdmin, async(req, res) => {
+      res.sendFile(path.join(__dirname, 'views/adminview', 'add_book.html'));
     });
 
     // Định nghĩa route để tìm và truyền dữ liệu từ 2 bảng category + author vào thẻ select để thực hiện thêm sách
@@ -175,7 +178,7 @@ mongoose.connect(uri)
 
         // Set the userId in session
         req.session.userId = user._id;
-
+      
         // Redirect user to the homepage after login
         res.status(200).redirect('/');
       } catch (error) {
@@ -187,7 +190,7 @@ mongoose.connect(uri)
 
 
     //Thêm tác giả
-    app.post('/add_author', async (req, res) => {
+    app.post('/add_author',authAdmin, async (req, res) => {
       try {
         const { author_name, dateofbirth } = req.body;
         const newAuthor = new Author({ author_name, dateofbirth });
@@ -200,7 +203,7 @@ mongoose.connect(uri)
     });
 
     //Thêm thể loại
-    app.post('/add_category', async (req, res) => {
+    app.post('/add_category',authAdmin, async (req, res) => {
       try {
         const { category_name } = req.body;
         const newCategory = new Category({ category_name });
@@ -212,7 +215,7 @@ mongoose.connect(uri)
       }
     });
 
-    app.post('/add_book', async (req, res) => {
+    app.post('/add_book', authAdmin,async (req, res) => {
       try {
         console.log(req.body);
         const { book_name, category, description, publish_date, author, cover, price} = req.body;
@@ -273,8 +276,41 @@ mongoose.connect(uri)
         console.error('Error deleting book:', error);
         res.status(500).send('Failed to delete book');
       }
-    });
+    }); 
+    
+    //--------------------------Admin-----------------
 
+// Khai báo middleware authAdmin
+async function authAdmin(req, res, next) {
+  try {
+    // Kiểm tra xem session đã có userId chưa
+    if (!req.session || !req.session.userId) {
+      res.status(403);
+      return res.send('You need to sign in.');
+    }
+
+    // Tìm thông tin người dùng từ cơ sở dữ liệu
+    const user = await User.findById(req.session.userId);
+
+    // Kiểm tra xem người dùng tồn tại và có vai trò là 'Admin' không
+    if ( user.role !== 'Admin') {
+      res.status(401);
+      return res.send('Not allowed.');
+    }
+
+    // Nếu người dùng đã đăng nhập và có vai trò là 'Admin', cho phép tiếp tục xử lý request
+    next();
+  } catch (error) {
+    console.error('Error checking admin role:', error);
+    res.status(500);
+    return res.send('Internal Server Error');
+  }
+}
+
+    app.get('/admin', authAdmin, (req, res) => {
+   
+    });
+    
     // Xóa đơn hàng theo ID
     app.delete('/delete_order/:id', async (req, res) => {
       try {
@@ -289,7 +325,6 @@ mongoose.connect(uri)
         res.status(500).send('Failed to delete order');
       }
     });
-
     const PORT = process.env.PORT || 8000;
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
@@ -300,5 +335,6 @@ mongoose.connect(uri)
   .catch(error => {
     console.error('Error connecting to MongoDB:', error);
   });
+
 
 module.exports = app;
