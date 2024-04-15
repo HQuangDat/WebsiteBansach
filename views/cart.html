@@ -142,8 +142,8 @@
 				</div>
 		  
 				<div class="row">
-				  <div class="col-md-12">
-					<button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</button>
+				  <a class="col-md-12" href="/checkout">
+            <button class="btn btn-black btn-lg py-3 btn-block">Proceed To Checkout</button>
 				  </div>
 				</div>
 			  </div>
@@ -163,83 +163,89 @@
   <script src="javascripts/custom.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    
-      const cartItemsContainer = document.getElementById('cartItems');
-      
-      cartItems.forEach(item => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td class="product-thumbnail"><img src="images/${item.cover}" class="img-fluid"></td>
-        <td class="product-name">${item.bookName}</td>
-        <td class="product-price">$${item.price.toFixed(2)}</td>
-        <td class="product-quantity">${item.quantity}</td>
-        <td class="product-total">$${(item.price * item.quantity).toFixed(2)}</td>
-        <td class="product-remove">
-          <button class="btn btn-sm btn-danger" onclick="removeFromCart('${item.bookName}'); return false;">Remove</button>
-        </td>
-      `;
-      cartItemsContainer.appendChild(row);
-      });
-    
-      updateCartTotal();
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        const cartItemsContainer = document.getElementById('cartItems');
+
+        cartItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="product-thumbnail"><img src="images/${item.cover}" class="img-fluid"></td>
+                <td class="product-name">${item.bookName}</td>
+                <td class="product-price">$${item.price.toFixed(2)}</td>
+                <td class="product-quantity">${item.quantity}</td>
+                <td class="product-total">$${(item.price * item.quantity).toFixed(2)}</td>
+                <td class="product-remove">
+                    <button class="btn btn-sm btn-danger" onclick="removeFromCart('${item.bookId}'); return false;">Remove</button>
+                </td>
+            `;
+            cartItemsContainer.appendChild(row);
+        });
+
+        updateCartTotal();
     });
-    
-    // Function to remove item from cart
-    function removeFromCart(bookName) {
-      let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    
-      cartItems = cartItems.filter(item => item.bookName !== bookName);
-    
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    
-      // Refresh the cart page
-      location.reload();
-    }
-    
-    // Function to update cart total
-    function updateCartTotal() {  
-      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-      let subtotal = 0;
-    
-      cartItems.forEach(item => {
-      subtotal += item.price * item.quantity;
-      });
-    
-      document.getElementById('subtotal').innerText = `$${subtotal.toFixed(2)}`;
-      document.getElementById('total').innerText = `$${subtotal.toFixed(2)}`;
+
+    // Function to remove item from cart by book ID
+    function removeFromCart(bookId) {
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+        // Find the index of the item with the specified book ID
+        const itemIndex = cartItems.findIndex(item => item.bookId === bookId);
+
+        // Remove the item if found
+        if (itemIndex !== -1) {
+            cartItems.splice(itemIndex, 1);
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+
+            // Refresh the cart page
+            location.reload();
+        }
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-				fetch('/check_login')
-					.then(response => response.json())
-					.then(data => {
-						const userMenu = document.getElementById('userMenu');
-						if (data.loggedIn) {
-							userMenu.innerHTML = `
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										<img src="images/user.svg">
-									</a>
-									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-										<li><a class="dropdown-item" href="#">Profile</a></li>
-										<li><a class="dropdown-item" href="/logout">Logout</a></li>
-									</ul>
-								</li>
-								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
-							`;
-						} else {
-							userMenu.innerHTML = `
-								<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
-								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
-							`;
-						}
-					})
-					.catch(error => {
-						console.error('Error checking login status:', error);
-					});
-		});
-  </script>
+    // Function to update cart total
+    function updateCartTotal() {
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        let subtotal = 0;
+
+        cartItems.forEach(item => {
+            subtotal += item.price * item.quantity;
+        });
+
+        document.getElementById('subtotal').innerText = `$${subtotal.toFixed(2)}`;
+        document.getElementById('total').innerText = `$${subtotal.toFixed(2)}`;
+    }
+
+    // Check login status and update user menu
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/check_login')
+            .then(response => response.json())
+            .then(data => {
+                const userMenu = document.getElementById('userMenu');
+                if (data.loggedIn) {
+                    userMenu.innerHTML = `
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="images/user.svg">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+                    `;
+                } else {
+                    userMenu.innerHTML = `
+                        <li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+                        <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error checking login status:', error);
+            });
+    });
+</script>
+
   
 </body>
 

@@ -8,6 +8,7 @@ const userSchema = require('./schemas/user');
 const authorSchema = require('./schemas/author');
 const bookSchema = require('./schemas/book');
 const categorySchema = require('./schemas/category');
+const orderSchema = require('./schemas/order');
 
 
 const app = express();
@@ -20,6 +21,7 @@ mongoose.connect(uri)
     const Author = mongoose.model('Author', authorSchema);
     const Category = mongoose.model('Category', categorySchema);
     const Book = mongoose.model('Book', bookSchema);
+    const Order = mongoose.model('Order', orderSchema);
     const store = new MongoDBStore({
       uri: uri,
       collection: 'sessions',
@@ -59,6 +61,10 @@ mongoose.connect(uri)
 
     app.get('/cart', (req, res) => {
       res.sendFile(path.join(__dirname, 'views', 'cart.html'));
+    });
+
+    app.get('/checkout', (req, res) => {
+      res.sendFile(path.join(__dirname, 'views', 'checkout.html'));
     });
 
     app.get('/add_author', (req, res) => {
@@ -112,7 +118,7 @@ mongoose.connect(uri)
       }
     });
     
-    // Endpoint for user logout
+    // User logout
     app.get('/logout', (req, res) => {
       req.session.destroy(err => {
         if (err) {
@@ -123,7 +129,28 @@ mongoose.connect(uri)
       });
     });
 
-    //Post
+    // Profile
+    app.get('/profile', async (req, res) => {
+      try {
+          if (!req.session.userId) {
+              return res.status(401).json({ error: 'Unauthorized' });
+          }
+
+          const user = await User.findById(req.session.userId);
+
+          if (!user) {
+              return res.status(404).json({ error: 'User not found' });
+          }
+
+          res.status(200).json({user});
+      } catch (error) {
+          console.error('Error fetching user profile:', error);
+          res.status(500).json({ error: 'Failed to fetch user profile' });
+      }
+    });
+
+
+    //Chức năng đăng ký
     app.post('/register', async (req, res) => {
       try {
         const { username, password, email, address, phone_number } = req.body;
@@ -136,7 +163,7 @@ mongoose.connect(uri)
       }
     });
 
-    // Endpoint for user login
+    // Đăng nhập
     app.post('/login', async (req, res) => {
       try {
         const { username, password } = req.body;
@@ -159,7 +186,7 @@ mongoose.connect(uri)
 
 
 
-
+    //Thêm tác giả
     app.post('/add_author', async (req, res) => {
       try {
         const { author_name, dateofbirth } = req.body;
@@ -172,6 +199,7 @@ mongoose.connect(uri)
       }
     });
 
+    //Thêm thể loại
     app.post('/add_category', async (req, res) => {
       try {
         const { category_name } = req.body;
@@ -198,6 +226,41 @@ mongoose.connect(uri)
     });
 
 
+    // Handle checkout request
+    app.post('/checkout', (req, res) => {
+      const { shippingAddress, paymentMethod, cartItems } = req.body;
+    
+      // Check if the shippingAddress and cartItems are provided
+      if (!shippingAddress || !cartItems || cartItems.length === 0) {
+        return res.status(400).send('Shipping address and at least one book are required');
+      }
+    
+      // Calculate total price based on cart items
+      let totalPrice = 0;
+      cartItems.forEach(item => {
+        totalPrice += item.price * item.quantity;
+      });
+    
+      const newOrder = new Order({
+        user: req.session.userId, 
+        books: cartItems.map(item => item._id),
+        shipping_address: shippingAddress,
+        total_price: totalPrice,
+        payment_method: paymentMethod
+      });
+    
+      newOrder.save()
+        .then(() => {
+          req.session.cartItems = [];
+          res.status(201).send('Order placed successfully');
+        })
+        .catch(error => {
+          console.error('Error placing order:', error);
+          res.status(500).send('Failed to place order');
+        });
+    });
+
+
     // Xóa sách theo ID
     app.delete('/delete_book/:id', async (req, res) => {
       try {
@@ -212,8 +275,6 @@ mongoose.connect(uri)
         res.status(500).send('Failed to delete book');
       }
     });
-
-
 
 
     const PORT = process.env.PORT || 8000;

@@ -21,11 +21,10 @@
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/stylesheets/all.min.css" rel="stylesheet">
 		<link href="stylesheets/tiny-slider.css" rel="stylesheet">
 		<link href="stylesheets/style.css" rel="stylesheet">
-		<title>Book shop </title>
+		<title>Book shop</title>
 	</head>
 
 	<body>
-
 		<!-- Start Header/Navigation -->
 		<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
 
@@ -88,10 +87,6 @@
 		<!-- Start Footer Section -->
 		<footer class="footer-section">
 			<div class="container relative">
-
-				<div class="sofa-img">
-					<img src="images/sofa.png" alt="Image" class="img-fluid">
-				</div>
 				<div class="row g-5 mb-5">
 					<div class="col-lg-4">
 						<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Furni<span>.</span></a></div>
@@ -171,7 +166,36 @@
 		<script src="javascripts/tiny-slider.js"></script>
 		<script src="javascripts/custom.js"></script>
 		<script>
-			//Lấy danh sách tất cả sách
+			// Function to check login status before adding item to cart
+			function checkLoginBeforeAddToCart(bookName, price, cover, bookId) {
+				fetch('/check_login')
+					.then(response => response.json())
+					.then(data => {
+						if (data.loggedIn) {
+							addToCart(bookName, price, cover, bookId);
+						} else {
+							window.location.href = '/login';
+						}
+					})
+					.catch(error => {
+						console.error('Error checking login status:', error);
+					});
+			}
+		
+			// Function to add item to cart
+			function addToCart(bookName, price, cover, bookId) {
+				const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+				const existingItemIndex = cartItems.findIndex(item => item.bookName === bookName);
+				if (existingItemIndex !== -1) {
+					cartItems[existingItemIndex].quantity++;
+				} else {
+					cartItems.push({ bookName, price, quantity: 1, cover, bookId }); // Include bookId here
+				}
+				localStorage.setItem('cartItems', JSON.stringify(cartItems));
+				alert('Item added to cart');
+			}
+		
+			// Fetch books and display them
 			fetch('/get_books')
 				.then(response => response.json())
 				.then(books => {
@@ -185,7 +209,7 @@
 								<img src="${coverUrl}" class="img-fluid product-thumbnail">
 								<h3 class="product-title">${book.book_name}</h3>
 								<strong class="product-price">$${book.price.toFixed(2)}</strong>
-								<span class="icon-cross" onclick="checkLoginBeforeAddToCart('${book.book_name}', ${book.price}, '${book.cover}')">
+								<span class="icon-cross" onclick="checkLoginBeforeAddToCart('${book.book_name}', ${book.price}, '${book.cover}', '${book._id}')">
 									<img src="images/cross.svg" class="img-fluid">
 								</span>
 							</div>
@@ -197,39 +221,8 @@
 					console.error('Error fetching books:', error);
 				});
 		
-			// Function to check login status before adding item to cart
-			// Function to check login status before adding item to cart
-			function checkLoginBeforeAddToCart(bookName, price, cover) {
-				fetch('/check_login')
-					.then(response => response.json())
-					.then(data => {
-						if (data.loggedIn) {
-							addToCart(bookName, price, cover);
-						} else {
-							window.location.href = '/login';
-						}
-					})
-					.catch(error => {
-						console.error('Error checking login status:', error);
-					});
-			}
-
-		
-			// Function to add item to cart
-			function addToCart(bookName, price, cover) {
-				const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-				const existingItemIndex = cartItems.findIndex(item => item.bookName === bookName);
-				if (existingItemIndex !== -1) {
-					cartItems[existingItemIndex].quantity++;
-				} else {
-					cartItems.push({ bookName, price, quantity: 1, cover });
-				}
-				localStorage.setItem('cartItems', JSON.stringify(cartItems));
-				alert('Item added to cart');
-			}
-
-			//Check login
-			document.addEventListener("DOMContentLoaded", function() {
+			// Check login status and update user menu
+			document.addEventListener("DOMContentLoaded", function () {
 				fetch('/check_login')
 					.then(response => response.json())
 					.then(data => {
@@ -241,7 +234,7 @@
 										<img src="images/user.svg">
 									</a>
 									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-										<li><a class="dropdown-item" href="#">Profile</a></li>
+										<li><a class="dropdown-item" href="/profile">Profile</a></li>
 										<li><a class="dropdown-item" href="/logout">Logout</a></li>
 									</ul>
 								</li>
@@ -257,8 +250,9 @@
 					.catch(error => {
 						console.error('Error checking login status:', error);
 					});
-			    });
-		</script>		
+			});
+		</script>
+		
 	</body>
 
 </html>
