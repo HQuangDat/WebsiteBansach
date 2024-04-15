@@ -1,13 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const path = require('path'); 
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const userSchema = require('./schemas/user');
 const authorSchema = require('./schemas/author');
 const bookSchema = require('./schemas/book');
 const categorySchema = require('./schemas/category');
-const bodyParser = require('body-parser');
-const path = require('path'); 
-const app = express();
 
+
+const app = express();
 
 const uri = 'mongodb://localhost:27017/Websitebansach';
 
@@ -17,10 +20,22 @@ mongoose.connect(uri)
     const Author = mongoose.model('Author', authorSchema);
     const Category = mongoose.model('Category', categorySchema);
     const Book = mongoose.model('Book', bookSchema);
+    const store = new MongoDBStore({
+      uri: uri,
+      collection: 'sessions',
+    });
+
 
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.use(express.static(path.join(__dirname, 'public')));
+    app.use(session({
+      secret: 'Hehe',
+      resave: false,
+      saveUninitialized: true,
+      store: store,
+    }));
+
 
     app.get('/register', (req, res) => {
       res.sendFile(path.join(__dirname, 'views', 'register.html'));
@@ -78,7 +93,7 @@ mongoose.connect(uri)
           res.status(500).send('Failed to fetch authors');
       }
     });
-
+    //
     app.get('/get_books', async (req, res) => {
       try {
         const books = await Book.find();
@@ -89,34 +104,61 @@ mongoose.connect(uri)
       }
     });
 
+    app.get('/check_login', (req, res) => {
+      if (req.session.userId) {
+        res.status(200).json({ loggedIn: true });
+      } else {
+        res.status(201).json({ loggedIn: false });
+      }
+    });
+    
+    // Endpoint for user logout
+    app.get('/logout', (req, res) => {
+      req.session.destroy(err => {
+        if (err) {
+          console.error('Error logging out:', err);
+          return res.status(500).json({ error: 'Failed to logout' });
+        }
+        res.redirect('/login');
+      });
+    });
+
     //Post
     app.post('/register', async (req, res) => {
       try {
         const { username, password, email, address, phone_number } = req.body;
         const newUser = new User({ username, password ,email, address, phone_number });
         await newUser.save();
-        res.status(201).send('User registered successfully');
+        res.status(201).redirect('/');
       } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).send('Failed to register user');
       }
     });
 
+    // Endpoint for user login
     app.post('/login', async (req, res) => {
       try {
         const { username, password } = req.body;
         const user = await User.findOne({ username, password });
-    
+        
         if (!user) {
           return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        res.status(200).json({ message: 'Login successful', user });
+        // Set the userId in session
+        req.session.userId = user._id;
+
+        // Redirect user to the homepage after login
+        res.status(200).redirect('/');
       } catch (error) {
         console.error('Error logging in:', error);
         res.status(500).json({ error: 'Failed to login' });
       }
     });
+
+
+
 
     app.post('/add_author', async (req, res) => {
       try {
@@ -135,7 +177,7 @@ mongoose.connect(uri)
         const { category_name } = req.body;
         const newCategory = new Category({ category_name });
         await newCategory.save();
-        res.status(201).send('Add new Category successfully');
+        res.status(201).send('Add new Category successfully').redirect('/');
       } catch (error) {
         console.error('Error in add new Category:', error);
         res.status(500).send('Failed to add new Category');
@@ -148,7 +190,7 @@ mongoose.connect(uri)
         const { book_name, category, description, publish_date, author, cover, price} = req.body;
         const newBook = new Book({ book_name, category, description, publish_date, author, cover, price });
         await newBook.save();
-        res.status(201).send('Add new book successfully');
+        res.status(201).redirect('/');
       } catch (error) {
         console.error('Error in add new book:', error);
         res.status(500).send('Failed to add new book');
@@ -156,8 +198,7 @@ mongoose.connect(uri)
     });
 
 
-    // Xóa sách
-    // Delete a book by ID
+    // Xóa sách theo ID
     app.delete('/delete_book/:id', async (req, res) => {
       try {
         const { id } = req.params;

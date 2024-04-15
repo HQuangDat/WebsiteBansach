@@ -11,6 +11,13 @@ const orderSchema = new mongoose.Schema({
         ref: 'Book',
         required: true
     }],
+    shipping_address: {
+        type: String,
+        default: function() {
+            return this.user.address;
+        },
+        required: true
+    },
     order_date: {
         type: Date,
         default: Date.now,
@@ -18,13 +25,6 @@ const orderSchema = new mongoose.Schema({
     },
     total_price: {
         type: Number,
-        required: true
-    },
-    shipping_address: {
-        type: String,
-        default: function() {
-            return this.user.address;
-        },
         required: true
     },
     payment_method: {

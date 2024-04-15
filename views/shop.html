@@ -48,9 +48,8 @@
 						<li><a class="nav-link" href="contact.html">Contact us</a></li>
 					</ul>
 
-					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
-						<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
+						
 					</ul>
 				</div>
 			</div>
@@ -172,6 +171,7 @@
 		<script src="javascripts/tiny-slider.js"></script>
 		<script src="javascripts/custom.js"></script>
 		<script>
+			//Lấy danh sách tất cả sách
 			fetch('/get_books')
 				.then(response => response.json())
 				.then(books => {
@@ -185,7 +185,7 @@
 								<img src="${coverUrl}" class="img-fluid product-thumbnail">
 								<h3 class="product-title">${book.book_name}</h3>
 								<strong class="product-price">$${book.price.toFixed(2)}</strong>
-								<span class="icon-cross" onclick="addToCart('${book.book_name}', ${book.price}, '${book.cover}')">
+								<span class="icon-cross" onclick="checkLoginBeforeAddToCart('${book.book_name}', ${book.price}, '${book.cover}')">
 									<img src="images/cross.svg" class="img-fluid">
 								</span>
 							</div>
@@ -197,7 +197,21 @@
 					console.error('Error fetching books:', error);
 				});
 		
-			// Function to add item to cart
+			// Function to check login status before adding item to cart
+			function checkLoginBeforeAddToCart(bookName, price, cover) {
+				fetch('/check_login')
+					.then(response => {
+						if (response.ok) {
+							addToCart(bookName, price, cover);
+						} else {
+							window.location.href = '/login';
+						}
+					})
+				.catch(error => {
+					console.error('Error checking login status:', error);
+       		});	
+}
+		
 			// Function to add item to cart
 			function addToCart(bookName, price, cover) {
 				const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
@@ -210,7 +224,38 @@
 				localStorage.setItem('cartItems', JSON.stringify(cartItems));
 				alert('Item added to cart');
 			}
-		</script>
+
+			//Check login
+			document.addEventListener("DOMContentLoaded", function() {
+				fetch('/check_login')
+					.then(response => response.json())
+					.then(data => {
+						const userMenu = document.getElementById('userMenu');
+						if (data.loggedIn) {
+							userMenu.innerHTML = `
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										<img src="images/user.svg">
+									</a>
+									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+										<li><a class="dropdown-item" href="#">Profile</a></li>
+										<li><a class="dropdown-item" href="/logout">Logout</a></li>
+									</ul>
+								</li>
+								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+							`;
+						} else {
+							userMenu.innerHTML = `
+								<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+							`;
+						}
+					})
+					.catch(error => {
+						console.error('Error checking login status:', error);
+					});
+			    });
+		</script>		
 	</body>
 
 </html>

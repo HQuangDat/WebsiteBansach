@@ -40,9 +40,8 @@
 						<li><a class="nav-link" href="contact.html">Contact us</a></li>
 					</ul>
 
-					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
-						<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
+
 					</ul>
 				</div>
 			</div>
@@ -58,7 +57,7 @@
 							<div class="intro-excerpt">
 								<h1>Best seller <span clsas="d-block">of 2024</span></h1>
 								<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
-								<p><a href="" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
+								<p><a href="/shop" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
 							</div>
 						</div>
 						<div class="col-lg-7">
@@ -533,6 +532,37 @@
 		<script src="javascripts/bootstrap.bundle.min.js"></script>
 		<script src="javascripts/tiny-slider.js"></script>
 		<script src="javascripts/custom.js"></script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				fetch('/check_login')
+					.then(response => response.json())
+					.then(data => {
+						const userMenu = document.getElementById('userMenu');
+						if (data.loggedIn) {
+							userMenu.innerHTML = `
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										<img src="images/user.svg">
+									</a>
+									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+										<li><a class="dropdown-item" href="#">Profile</a></li>
+										<li><a class="dropdown-item" href="/logout">Logout</a></li>
+									</ul>
+								</li>
+								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+							`;
+						} else {
+							userMenu.innerHTML = `
+								<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+							`;
+						}
+					})
+					.catch(error => {
+						console.error('Error checking login status:', error);
+					});
+			    });
+		</script>
 	</body>
 
 </html>

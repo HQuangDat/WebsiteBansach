@@ -14,7 +14,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/stylesheets/all.min.css" rel="stylesheet">
   <link href="stylesheets/tiny-slider.css" rel="stylesheet">
   <link href="stylesheets/style.css" rel="stylesheet">
-  <title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
+  <title>Cart</title>
 </head>
 
 <body>
@@ -41,9 +41,8 @@
           <li><a class="nav-link" href="contact.html">Contact us</a></li>
         </ul>
 
-        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-          <li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
-          <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
+
         </ul>
       </div>
     </div>
@@ -163,53 +162,83 @@
   <script src="javascripts/tiny-slider.js"></script>
   <script src="javascripts/custom.js"></script>
   <script>
-	document.addEventListener('DOMContentLoaded', function () {
-	  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-  
-	  const cartItemsContainer = document.getElementById('cartItems');
-	  
-	  cartItems.forEach(item => {
-		const row = document.createElement('tr');
-		row.innerHTML = `
-		  <td class="product-thumbnail"><img src="images/${item.cover}" class="img-fluid"></td>
-		  <td class="product-name">${item.bookName}</td>
-		  <td class="product-price">$${item.price.toFixed(2)}</td>
-		  <td class="product-quantity">${item.quantity}</td>
-		  <td class="product-total">$${(item.price * item.quantity).toFixed(2)}</td>
-		  <td class="product-remove">
-			<button class="btn btn-sm btn-danger" onclick="removeFromCart('${item.bookName}')">Remove</button>
-		  </td>
-		`;
-		cartItemsContainer.appendChild(row);
-	  });
-  
-	  updateCartTotal();
-	});
-  
-	// Function to remove item from cart
-	function removeFromCart(bookName) {
-	  let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-  
-	  cartItems = cartItems.filter(item => item.bookName !== bookName);
-  
-	  localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  
-	  // Refresh the cart page
-	  location.reload();
-	}
-  
-	// Function to update cart total
-	function updateCartTotal() {
-	  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-	  let subtotal = 0;
-  
-	  cartItems.forEach(item => {
-		subtotal += item.price * item.quantity;
-	  });
-  
-	  document.getElementById('subtotal').innerText = `$${subtotal.toFixed(2)}`;
-	  document.getElementById('total').innerText = `$${subtotal.toFixed(2)}`;
-	}
+    document.addEventListener('DOMContentLoaded', function () {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    
+      const cartItemsContainer = document.getElementById('cartItems');
+      
+      cartItems.forEach(item => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td class="product-thumbnail"><img src="images/${item.cover}" class="img-fluid"></td>
+        <td class="product-name">${item.bookName}</td>
+        <td class="product-price">$${item.price.toFixed(2)}</td>
+        <td class="product-quantity">${item.quantity}</td>
+        <td class="product-total">$${(item.price * item.quantity).toFixed(2)}</td>
+        <td class="product-remove">
+          <button class="btn btn-sm btn-danger" onclick="removeFromCart('${item.bookName}'); return false;">Remove</button>
+        </td>
+      `;
+      cartItemsContainer.appendChild(row);
+      });
+    
+      updateCartTotal();
+    });
+    
+    // Function to remove item from cart
+    function removeFromCart(bookName) {
+      let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    
+      cartItems = cartItems.filter(item => item.bookName !== bookName);
+    
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    
+      // Refresh the cart page
+      location.reload();
+    }
+    
+    // Function to update cart total
+    function updateCartTotal() {  
+      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+      let subtotal = 0;
+    
+      cartItems.forEach(item => {
+      subtotal += item.price * item.quantity;
+      });
+    
+      document.getElementById('subtotal').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('total').innerText = `$${subtotal.toFixed(2)}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+				fetch('/check_login')
+					.then(response => response.json())
+					.then(data => {
+						const userMenu = document.getElementById('userMenu');
+						if (data.loggedIn) {
+							userMenu.innerHTML = `
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										<img src="images/user.svg">
+									</a>
+									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+										<li><a class="dropdown-item" href="#">Profile</a></li>
+										<li><a class="dropdown-item" href="/logout">Logout</a></li>
+									</ul>
+								</li>
+								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+							`;
+						} else {
+							userMenu.innerHTML = `
+								<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+							`;
+						}
+					})
+					.catch(error => {
+						console.error('Error checking login status:', error);
+					});
+		});
   </script>
   
 </body>
