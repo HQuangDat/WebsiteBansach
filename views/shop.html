@@ -198,19 +198,22 @@
 				});
 		
 			// Function to check login status before adding item to cart
+			// Function to check login status before adding item to cart
 			function checkLoginBeforeAddToCart(bookName, price, cover) {
 				fetch('/check_login')
-					.then(response => {
-						if (response.ok) {
+					.then(response => response.json())
+					.then(data => {
+						if (data.loggedIn) {
 							addToCart(bookName, price, cover);
 						} else {
 							window.location.href = '/login';
 						}
 					})
-				.catch(error => {
-					console.error('Error checking login status:', error);
-       		});	
-}
+					.catch(error => {
+						console.error('Error checking login status:', error);
+					});
+			}
+
 		
 			// Function to add item to cart
 			function addToCart(bookName, price, cover) {
