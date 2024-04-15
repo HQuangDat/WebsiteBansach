@@ -13,9 +13,6 @@ const orderSchema = new mongoose.Schema({
     }],
     shipping_address: {
         type: String,
-        default: function() {
-            return this.user.address;
-        },
         required: true
     },
     order_date: {

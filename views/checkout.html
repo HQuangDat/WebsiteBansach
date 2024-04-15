@@ -42,7 +42,6 @@
         </ul>
 
         <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu" data-user-id="<%= user._id %>">
-          <!-- Add data-user-id attribute with user ID -->
         </ul>
       </div>
     </div>
@@ -137,37 +136,85 @@
       const userId = document.getElementById('userMenu').getAttribute('data-user-id');
 
       function checkout() {
-        const shippingAddress = document.getElementById('shippingAddress').value;
-        const paymentMethod = document.getElementById('paymentMethod').value;
+    const userId = document.getElementById('userMenu').getAttribute('data-user-id');
+    
+    const shippingAddress = document.getElementById('shippingAddress').value;
+    const paymentMethod = document.getElementById('paymentMethod').value;
 
-        const data = {
-          user: userId,
-          shippingAddress: shippingAddress,
-          paymentMethod: paymentMethod,
-          cartItems: cartItems
-        };
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-        fetch('/checkout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
+    // Calculate total price
+    let totalPrice = 0;
+    cartItems.forEach(item => {
+        totalPrice += item.price * item.quantity;
+    });
+
+    // Construct the data object to be sent to the server
+    const data = {
+        user: userId,
+        books: cartItems.map(item => item.bookId),
+        shipping_address: shippingAddress,
+        total_price: totalPrice,
+        payment_method: paymentMethod,
+        order_status: 'pending' // Default order status
+    };
+
+    // Make a POST request to the server to create the order
+    fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         })
         .then(response => {
-          if (response.ok) {
-            window.location.href = '/thank';
-          } else {
-            console.error('Error:', response.statusText);
-          }
+            if (response.ok) {
+                // If the request is successful, redirect to the thank you page
+                window.location.href = '/thank';
+            } else {
+                console.error('Error:', response.statusText);
+            }
         })
         .catch(error => {
-          console.error('Error:', error);
+            console.error('Error:', error);
         });
-      }
+    }
+
+
 
       document.getElementById('checkoutButton').addEventListener('click', checkout);
     });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+                  fetch('/check_login')
+                      .then(response => response.json())
+                      .then(data => {
+                          const userMenu = document.getElementById('userMenu');
+                          if (data.loggedIn) {
+                              userMenu.innerHTML = `
+                                  <li class="nav-item dropdown">
+                                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                          <img src="images/user.svg">
+                                      </a>
+                                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                          <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                          <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                      </ul>
+                                  </li>
+                                  <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+                              `;
+                          } else {
+                              userMenu.innerHTML = `
+                                  <li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+                                  <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+                              `;
+                          }
+                      })
+                      .catch(error => {
+                          console.error('Error checking login status:', error);
+                      });
+                  });
   </script>
 </body>
 </html>
