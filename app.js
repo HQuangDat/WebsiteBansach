@@ -86,7 +86,10 @@ mongoose.connect(uri)
     app.get('/book_manager', authAdmin, (req, res) => {
       res.sendFile(path.join(__dirname, 'views/adminview', 'book_manager.html'));
     });
-  
+
+    app.get('/user_manager', authAdmin, (req, res) => {
+      res.sendFile(path.join(__dirname, 'views/adminview', 'user_manager.html'));
+    });
     
     app.get('/edit_book/:id', authAdmin, async (req, res) => {
       try {
@@ -102,6 +105,23 @@ mongoose.connect(uri)
       } catch (error) {
         console.error('Error fetching book for editing:', error);
         res.status(500).send('Failed to fetch book for editing');
+      }
+    });
+
+    app.get('/edit_user/:id', authAdmin, async (req, res) => {
+      try {
+        const { id } = req.params;
+    
+        const user = await User.findById(id);
+    
+        if (!user) {
+          return res.status(404).send('User not found');
+        }
+        
+        res.render('adminview/edit_user', { user });
+      } catch (error) {
+        console.error('Error fetching user for editing:', error);
+        res.status(500).send('Failed to fetch user for editing');
       }
     });
 
@@ -134,6 +154,17 @@ mongoose.connect(uri)
       } catch (error) {
         console.error('Error fetching books:', error);
         res.status(500).send('Failed to fetch books');
+      }
+    });
+
+    //Lấy tất cả thông tin mọi người dùng
+    app.get('/get_users', async (req, res) => {
+      try {
+        const users = await User.find();
+        res.json(users);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).send('Failed to fetch users');
       }
     });
 
@@ -302,6 +333,21 @@ mongoose.connect(uri)
       }
     });
 
+    // Xóa user theo ID
+    app.delete('/delete_user/:id', async (req, res) => {
+      try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).send('Invalid user ID');
+        }
+        await User.findByIdAndDelete(id);
+        res.status(200).send('User deleted successfully');
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).send('Failed to delete user');
+      }
+    });
+
     //--------------------------Admin-----------------
 
     // Khai báo middleware authAdmin
@@ -361,14 +407,13 @@ mongoose.connect(uri)
           return res.status(400).send('Invalid book ID');
         }
     
-        // Find the existing book by ID
         const existingBook = await Book.findById(id);
     
         if (!existingBook) {
           return res.status(404).send('Book not found');
         }
     
-        // Update the book fields with new data
+        // Update  book fields 
         existingBook.book_name = book_name;
         existingBook.category = category;
         existingBook.description = description;
@@ -376,13 +421,44 @@ mongoose.connect(uri)
         existingBook.author = author;
         existingBook.price = price;
     
-        // Save the updated book
+        // Save book
         await existingBook.save();
     
         res.status(200).send('Book updated successfully');
       } catch (error) {
         console.error('Error editing book:', error);
         res.status(500).send('Failed to edit book');
+      }
+    });
+
+    // Edit User
+    app.put('/edit_user/:id', authAdmin, async (req, res) => {
+      try {
+        const { id } = req.params;
+        const { username, password, email, address, phone_number } = req.body;
+    
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).send('Invalid User ID');
+        }
+    
+        const existingUser = await User.findById(id);
+    
+        if (!existingUser) {
+          return res.status(404).send('Book not found');
+        }
+    
+        existingUser.username = username;
+        existingUser.password = password;
+        existingUser.email = email;
+        existingUser.address = address;
+        existingUser.phone_number = phone_number;
+
+        await existingUser.save();
+    
+        res.status(200).send('User updated successfully');
+      } catch (error) {
+        console.error('Error editing User:', error);
+        res.status(500).send('Failed to edit User');
       }
     });
 
