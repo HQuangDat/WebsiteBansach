@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Untree.co">
+    <link rel="shortcut icon" href="/favicon.png">
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap4" />
+
+    <!-- Bootstrap CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/stylesheets/all.min.css"
+        rel="stylesheet">
+    <link href="/stylesheets/tiny-slider.css" rel="stylesheet">
+    <link href="/stylesheets/style.css" rel="stylesheet">
+    <title>Edit Book</title>
+</head>
+
+<body>
+
+    <!-- Start Header/Navigation -->
+    <!-- Start Header/Navigation -->
+    <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+
+        <div class="container">
+            <a class="navbar-brand" href="/">Furni<span>.</span></a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
+                aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsFurni">
+                <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li><a class="nav-link" href="/admin">Dashboard</a></li>
+                    <li><a class="nav-link" href="/add_book">Add Book</a></li>
+                    <li><a class="nav-link" href="/add_author">Add Author</a></li>
+                    <li><a class="nav-link" href="/add_category">Add Category</a></li>
+                    <li><a class="nav-link" href="/User_manager">User Manager</a></li>
+                    <li><a class="nav-link" href="/book_manager">Books Manager</a></li>
+                </ul>
+
+                <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
+            </div>
+        </div>
+
+    </nav>
+    <!-- End Header/Navigation -->
+
+    <!-- Start Add Book Section -->
+    <div class="add-book-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <form action="/edit_book/<%= book._id %>?_method=PUT" method="post">
+                        <h2 class="section-title mb-4">Edit Book</h2>
+                        <input type="hidden" name="_method" value="PUT">
+                        <input type="hidden" id="book_id" name="book_id" value="<%= book._id %>">
+                        <div class="mb-3">
+                            <label for="book_name" class="form-label">Book Name</label>
+                            <input type="text" class="form-control" id="book_name" name="book_name" value="<%= book.book_name %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="book_category" class="form-label">Book Category</label>
+                            <select class="form-control" id="category" name="category" required>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" name="description" value="<%= book.description %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="publish_date" class="form-label">Publish Date</label>
+                            <input type="date" class="form-control" id="publish_date" name="publish_date" value="<%= book.publish_date %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="author" class="form-label">Author</label>
+                            <select class="form-control" id="author" name="author" required>
+                              </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cover" class="form-label">Book Cover</label>
+                            <input type="file" class="form-control" id="cover" name="cover" accept="image/*" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Book Price</label>
+                            <input type="number" class="form-control" id="price" name="price" value="<%= book.price %>" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Edit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Add Book Section -->
+
+    <!-- Start Footer Section -->
+    <footer class="footer-section">
+        <!-- Your footer content here -->
+    </footer>
+    <!-- End Footer Section -->
+
+    <script src="javascripts/bootstrap.bundle.min.js"></script>
+    <script src="javascripts/tiny-slider.js"></script>
+    <script src="javascripts/custom.js"></script>
+</body>
+<script>
+    fetch('/get_categories')
+        .then(response => response.json())
+        .then(categories => {
+            const categorySelect = document.getElementById('category');
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category._id;
+                option.text = category.category_name;
+                categorySelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching categories:', error));
+
+    fetch('/get_authors')
+        .then(response => response.json())
+        .then(authors => {
+            const authorSelect = document.getElementById('author');
+            authors.forEach(author => {
+                const option = document.createElement('option');
+                option.value = author._id;
+                option.text = author.author_name;
+                authorSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching authors:', error));
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/check_login')
+            .then(response => response.json())
+            .then(data => {
+                const userMenu = document.getElementById('userMenu');
+                if (data.loggedIn) {
+                    userMenu.innerHTML = `
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<img src="images/user.svg">
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" href="/profile">Profile</a></li>
+								<li><a class="dropdown-item" href="/logout">Logout</a></li>
+							</ul>
+						</li>
+						<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+					`;
+                } else {
+                    userMenu.innerHTML = `
+						<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+						<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+					`;
+                }
+            })
+            .catch(error => {
+                console.error('Error checking login status:', error);
+            });
+    });
+</script>
+
+</html>

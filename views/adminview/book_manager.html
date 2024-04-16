@@ -1,221 +1,274 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="author" content="Untree.co">
-  <link rel="shortcut icon" href="favicon.png">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Untree.co">
+	<link rel="shortcut icon" href="favicon.png">
 
-  <meta name="description" content="" />
-  <meta name="keywords" content="bootstrap, bootstrap4" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="bootstrap, bootstrap4" />
 
-		<!-- Bootstrap CSS -->
-		<link href="stylesheets/bootstrap.min.css" rel="stylesheet">
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/stylesheets/all.min.css" rel="stylesheet">
-		<link href="stylesheets/tiny-slider.css" rel="stylesheet">
-		<link href="stylesheets/style.css" rel="stylesheet">
-		<title>Quản lý sách</title>
-	</head>
+	<!-- Bootstrap CSS -->
+	<link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/stylesheets/all.min.css"
+		rel="stylesheet">
+	<link href="stylesheets/tiny-slider.css" rel="stylesheet">
+	<link href="stylesheets/style.css" rel="stylesheet">
+	<title>Quản lý sách</title>
+</head>
 
-	<body>
-		    <!-- Start Header/Navigation -->
-            <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+<body>
+	<!-- Start Header/Navigation -->
+	<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
 
-                <div class="container">
-                    <a class="navbar-brand" href="/">Furni<span>.</span></a>
-        
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
-                        aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-        
-                    <div class="collapse navbar-collapse" id="navbarsFurni">
-                        <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="/">Home</a>
-                            </li>
-                            <li><a class="nav-link" href="/admin">Dashboard</a></li>
-                            <li><a class="nav-link" href="/add_book">Add Book</a></li>
-                            <li><a class="nav-link" href="/add_author">Add Author</a></li>
-                            <li><a class="nav-link" href="/add_category">Add Category</a></li>
-                            <li><a class="nav-link" href="/User_manager">User Manager</a></li>
-                            <li><a class="nav-link" href="/book_manager">Books Manager</a></li>
-                        </ul>
-        
-                        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
-                    </div>
-                </div>
-        
-            </nav>
-        <!-- End Header/Navigation -->
+		<div class="container">
+			<a class="navbar-brand" href="/">Furni<span>.</span></a>
 
-		<!-- Start Hero Section -->
-			<div class="hero">
-				<div class="container">
-					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Books Manager</h1>
-							</div>
-						</div>
-						<div class="col-lg-7">
-							
-						</div>
-					</div>
-				</div>
-			</div>
-		<!-- End Hero Section -->
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
+				aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-		
+			<div class="collapse navbar-collapse" id="navbarsFurni">
+				<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+					<li class="nav-item active">
+						<a class="nav-link" href="/">Home</a>
+					</li>
+					<li><a class="nav-link" href="/admin">Dashboard</a></li>
+					<li><a class="nav-link" href="/add_book">Add Book</a></li>
+					<li><a class="nav-link" href="/add_author">Add Author</a></li>
+					<li><a class="nav-link" href="/add_category">Add Category</a></li>
+					<li><a class="nav-link" href="/User_manager">User Manager</a></li>
+					<li><a class="nav-link" href="/book_manager">Books Manager</a></li>
+				</ul>
 
-		<div class="untree_co-section product-section before-footer-section">
-			<div class="container">
-				<div class="row" id="bookList">
-					
-				</div>
+				<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
 			</div>
 		</div>
 
+	</nav>
+	<!-- End Header/Navigation -->
 
-		<!-- Start Footer Section -->
-		<footer class="footer-section">
-			<div class="container relative">
-				<div class="row g-5 mb-5">
-					<div class="col-lg-4">
-						<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Furni<span>.</span></a></div>
-						<p class="mb-4">Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant</p>
-
-						<ul class="list-unstyled custom-social">
-							<li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
-							<li><a href="#"><span class="fa fa-brands fa-twitter"></span></a></li>
-							<li><a href="#"><span class="fa fa-brands fa-instagram"></span></a></li>
-							<li><a href="#"><span class="fa fa-brands fa-linkedin"></span></a></li>
-						</ul>
+	<!-- Start Hero Section -->
+	<div class="hero">
+		<div class="container">
+			<div class="row justify-content-between">
+				<div class="col-lg-5">
+					<div class="intro-excerpt">
+						<h1>Books Manager</h1>
 					</div>
-
-					<div class="col-lg-8">
-						<div class="row links-wrap">
-							<div class="col-6 col-sm-6 col-md-3">
-								<ul class="list-unstyled">
-									<li><a href="#">About us</a></li>
-									<li><a href="#">Services</a></li>
-									<li><a href="#">Blog</a></li>
-									<li><a href="#">Contact us</a></li>
-								</ul>
-							</div>
-
-							<div class="col-6 col-sm-6 col-md-3">
-								<ul class="list-unstyled">
-									<li><a href="#">Support</a></li>
-									<li><a href="#">Knowledge base</a></li>
-									<li><a href="#">Live chat</a></li>
-								</ul>
-							</div>
-
-							<div class="col-6 col-sm-6 col-md-3">
-								<ul class="list-unstyled">
-									<li><a href="#">Jobs</a></li>
-									<li><a href="#">Our team</a></li>
-									<li><a href="#">Leadership</a></li>
-									<li><a href="#">Privacy Policy</a></li>
-								</ul>
-							</div>
-
-							<div class="col-6 col-sm-6 col-md-3">
-								<ul class="list-unstyled">
-									<li><a href="#">Nordic Chair</a></li>
-									<li><a href="#">Kruzo Aero</a></li>
-									<li><a href="#">Ergonomic Chair</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
+				</div>
+				<div class="col-lg-7">
 
 				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Hero Section -->
 
-				<div class="border-top copyright">
-					<div class="row pt-4">
-						<div class="col-lg-6">
-            </p>
+
+
+	<div class="untree_co-section product-section before-footer-section">
+		<div class="container">
+			<div class="row" id="bookList">
+				<div class="col-12">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Book Name</th>
+								<th>Category</th>
+								<th>Description</th>
+								<th>Publish Date</th>
+								<th>Author</th>
+								<th>Cover</th>
+								<th>Price</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody id="bookTableBody">
+							<!-- Books will be dynamically added here -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Start Footer Section -->
+	<footer class="footer-section">
+		<div class="container relative">
+			<div class="row g-5 mb-5">
+				<div class="col-lg-4">
+					<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Furni<span>.</span></a></div>
+					<p class="mb-4">Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus
+						malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.
+						Pellentesque habitant</p>
+
+					<ul class="list-unstyled custom-social">
+						<li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
+						<li><a href="#"><span class="fa fa-brands fa-twitter"></span></a></li>
+						<li><a href="#"><span class="fa fa-brands fa-instagram"></span></a></li>
+						<li><a href="#"><span class="fa fa-brands fa-linkedin"></span></a></li>
+					</ul>
+				</div>
+
+				<div class="col-lg-8">
+					<div class="row links-wrap">
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
+								<li><a href="#">About us</a></li>
+								<li><a href="#">Services</a></li>
+								<li><a href="#">Blog</a></li>
+								<li><a href="#">Contact us</a></li>
+							</ul>
 						</div>
 
-						<div class="col-lg-6 text-center text-lg-end">
-							<ul class="list-unstyled d-inline-flex ms-auto">
-								<li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
+								<li><a href="#">Support</a></li>
+								<li><a href="#">Knowledge base</a></li>
+								<li><a href="#">Live chat</a></li>
+							</ul>
+						</div>
+
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
+								<li><a href="#">Jobs</a></li>
+								<li><a href="#">Our team</a></li>
+								<li><a href="#">Leadership</a></li>
 								<li><a href="#">Privacy Policy</a></li>
 							</ul>
 						</div>
 
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
+								<li><a href="#">Nordic Chair</a></li>
+								<li><a href="#">Kruzo Aero</a></li>
+								<li><a href="#">Ergonomic Chair</a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 
 			</div>
-		</footer>
-		<!-- End Footer Section -->	
+
+			<div class="border-top copyright">
+				<div class="row pt-4">
+					<div class="col-lg-6">
+						</p>
+					</div>
+
+					<div class="col-lg-6 text-center text-lg-end">
+						<ul class="list-unstyled d-inline-flex ms-auto">
+							<li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
+							<li><a href="#">Privacy Policy</a></li>
+						</ul>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</footer>
+	<!-- End Footer Section -->
 
 
-		<script src="javascripts/bootstrap.bundle.min.js"></script>
-		<script src="javascripts/tiny-slider.js"></script>
-		<script src="javascripts/custom.js"></script>
-		<script>
-			// Lấy thông tin tất cả sách và hiển thị
-			fetch('/get_books')
-				.then(response => response.json())
-				.then(books => {
-					const bookList = document.getElementById('bookList');
-					books.forEach(book => {
-						const bookItem = document.createElement('div');
-						bookItem.classList.add('col-12', 'col-md-4', 'col-lg-3', 'mb-5');
-						const coverUrl = `/images/${book.cover}`;
-						bookItem.innerHTML = `
-							<div class="product-item">
-								<img src="${coverUrl}" class="img-fluid product-thumbnail">
-								<h3 class="product-title">${book.book_name}</h3>
-								<strong class="product-price">$${book.price.toFixed(2)}</strong>
-								<span class="icon-cross" onclick="checkLoginBeforeAddToCart('${book.book_name}', ${book.price}, '${book.cover}', '${book._id}')">
-									<img src="images/cross.svg" class="img-fluid">
-								</span>
-							</div>
-						`;
-						bookList.appendChild(bookItem);
-					});
+	<script src="javascripts/bootstrap.bundle.min.js"></script>
+	<script src="javascripts/tiny-slider.js"></script>
+	<script src="javascripts/custom.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			// Fetch categories and authors
+			Promise.all([
+				fetch('/get_categories').then(response => response.json()),
+				fetch('/get_authors').then(response => response.json())
+			])
+				.then(([categories, authors]) => {
+					const categoryMap = new Map(categories.map(category => [category._id, category.category_name]));
+					const authorMap = new Map(authors.map(author => [author._id, author.author_name]));
+
+					// Fetch books
+					fetch('/get_books')
+						.then(response => response.json())
+						.then(books => {
+							const bookTableBody = document.getElementById('bookTableBody');
+							books.forEach(book => {
+								const row = document.createElement('tr');
+								row.innerHTML = `
+									<td>${book.book_name}</td>
+									<td>${categoryMap.get(book.category)}</td>
+									<td>${book.description}</td>
+									<td>${new Date(book.publish_date).toLocaleDateString()}</td>
+									<td>${authorMap.get(book.author)}</td>
+									<td><img src="/images/${book.cover}" alt="${book.book_name}" style="max-width: 100px;"></td>
+									<td>$${book.price.toFixed(2)}</td>
+									<td><a href="/edit_book/${book._id}">Edit</a> <a href="#" onclick="deleteBook('${book._id}')">Delete</a></td>
+								`;
+								bookTableBody.appendChild(row);
+							});
+						})
+						.catch(error => {
+							console.error('Error fetching books:', error);
+						});
 				})
 				.catch(error => {
-					console.error('Error fetching books:', error);
+					console.error('Error fetching categories and authors:', error);
 				});
-		
-			// Kiểm tra trạng thái login
-			document.addEventListener("DOMContentLoaded", function () {
-				fetch('/check_login')
-					.then(response => response.json())
-					.then(data => {
-						const userMenu = document.getElementById('userMenu');
-						if (data.loggedIn) {
-							userMenu.innerHTML = `
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										<img src="images/user.svg">
-									</a>
-									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-										<li><a class="dropdown-item" href="/profile">Profile</a></li>
-										<li><a class="dropdown-item" href="/logout">Logout</a></li>
-									</ul>
-								</li>
-								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
-							`;
-						} else {
-							userMenu.innerHTML = `
-								<li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
-								<li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
-							`;
-						}
-					})
-					.catch(error => {
-						console.error('Error checking login status:', error);
-					});
+
+			// Check login status and update user menu
+			fetch('/check_login')
+				.then(response => response.json())
+				.then(data => {
+					const userMenu = document.getElementById('userMenu');
+					if (data.loggedIn) {
+						userMenu.innerHTML = `
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="images/user.svg">
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+                `;
+					} else {
+						userMenu.innerHTML = `
+                    <li><a class="nav-link" href="/login"><img src="images/user.svg"></a></li>
+                    <li><a class="nav-link" href="/cart"><img src="images/cart.svg"></a></li>
+                `;
+					}
+				})
+				.catch(error => {
+					console.error('Error checking login status:', error);
+				});
+		});
+
+		function deleteBook(bookId) {
+			if (!confirm('Are you sure you want to delete this book?')) {
+				return;
+			}
+
+			fetch(`/delete_book/${bookId}`, {
+				method: 'DELETE',
+			})
+			.then(response => {
+				if (response.ok) {
+					console.log('Book deleted successfully');
+					location.reload();
+				} else {
+					console.error('Failed to delete book:', response.statusText);
+				}
+			})
+			.catch(error => {
+				console.error('Error deleting book:', error);
 			});
-		</script>
-		
-	</body>
+		}
+	</script>
+</body>
 
 </html>

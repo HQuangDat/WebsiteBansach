@@ -1,81 +1,85 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="author" content="Untree.co">
-  <link rel="shortcut icon" href="favicon.png">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Untree.co">
+	<link rel="shortcut icon" href="favicon.png">
 
-  <meta name="description" content="" />
-  <meta name="keywords" content="bootstrap, bootstrap4" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="bootstrap, bootstrap4" />
 
-		<!-- Bootstrap CSS -->
-		<link href="stylesheets/bootstrap.min.css" rel="stylesheet">
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/stylesheets/all.min.css" rel="stylesheet">
-		<link href="stylesheets/tiny-slider.css" rel="stylesheet">
-		<link href="stylesheets/style.css" rel="stylesheet">
-		<title>Add Category</title>
-	</head>
+	<!-- Bootstrap CSS -->
+	<link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/stylesheets/all.min.css"
+		rel="stylesheet">
+	<link href="stylesheets/tiny-slider.css" rel="stylesheet">
+	<link href="stylesheets/style.css" rel="stylesheet">
+	<title>Add Category</title>
+</head>
 
-	<body>
+<body>
 
-		<!-- Start Header/Navigation -->
-		<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+	<!-- Start Header/Navigation -->
+	<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
 
-			<div class="container">
-				<a class="navbar-brand" href="/">Furni<span>.</span></a>
+		<div class="container">
+			<a class="navbar-brand" href="/">Furni<span>.</span></a>
 
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
+				aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-				<div class="collapse navbar-collapse" id="navbarsFurni">
-					<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-						<li class="nav-item active">
-							<a class="nav-link" href="/">Home</a>
-						</li>
-						<li><a class="nav-link" href="/admin">Dashboard</a></li>
-						<li><a class="nav-link" href="/add_book">Add Book</a></li>
-						<li><a class="nav-link" href="/add_author">Add Author</a></li>
-						<li><a class="nav-link" href="/add_category">Add Category</a></li>
-						<li><a class="nav-link" href="/User_manager">User Manager</a></li>
-					</ul>
+			<div class="collapse navbar-collapse" id="navbarsFurni">
+				<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+					<li class="nav-item active">
+						<a class="nav-link" href="/">Home</a>
+					</li>
+					<li><a class="nav-link" href="/admin">Dashboard</a></li>
+					<li><a class="nav-link" href="/add_book">Add Book</a></li>
+					<li><a class="nav-link" href="/add_author">Add Author</a></li>
+					<li><a class="nav-link" href="/add_category">Add Category</a></li>
+					<li><a class="nav-link" href="/User_manager">User Manager</a></li>
+					<li><a class="nav-link" href="/book_manager">Books Manager</a></li>
+				</ul>
 
-					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
-				</div>
+				<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5" id="userMenu">
 			</div>
-				
-		</nav>
-		<!-- End Header/Navigation -->
+		</div>
 
-		<!-- Start Add Category Section -->
-		<div class="add-category-section">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-8 mx-auto">
-						<form method="post" action="/add_category">
-							<h2 class="section-title mb-4">Add New Category</h2>
-							<div class="mb-3">
-								<label for="category_name" class="form-label">Category Name</label>
-								<input type="text" class="form-control" id="category_name" name="category_name" required>
-							</div>
-							<button type="submit" class="btn btn-primary">Add Category</button>
-						</form>
-					</div>
+	</nav>
+	<!-- End Header/Navigation -->
+
+	<!-- Start Add Category Section -->
+	<div class="add-category-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 mx-auto">
+					<form method="post" action="/add_category">
+						<h2 class="section-title mb-4">Add New Category</h2>
+						<div class="mb-3">
+							<label for="category_name" class="form-label">Category Name</label>
+							<input type="text" class="form-control" id="category_name" name="category_name" required>
+						</div>
+						<button type="submit" class="btn btn-primary">Add Category</button>
+					</form>
 				</div>
 			</div>
 		</div>
-		<!-- End Add Category Section -->
+	</div>
+	<!-- End Add Category Section -->
 
-		<!-- Start Footer Section -->
-		<footer class="footer-section">
-			<!-- Your footer content here -->
-		</footer>
-		<!-- End Footer Section -->	
+	<!-- Start Footer Section -->
+	<footer class="footer-section">
+		<!-- Your footer content here -->
+	</footer>
+	<!-- End Footer Section -->
 
-		<script src="javascripts/bootstrap.bundle.min.js"></script>
-		<script src="javascripts/tiny-slider.js"></script>
-		<script src="javascripts/custom.js"></script>
+	<script src="javascripts/bootstrap.bundle.min.js"></script>
+	<script src="javascripts/tiny-slider.js"></script>
+	<script src="javascripts/custom.js"></script>
 	<script>document.addEventListener("DOMContentLoaded", function () {
 			fetch('/check_login')
 				.then(response => response.json())
@@ -106,5 +110,6 @@
 				});
 		});
 	</script>
-	</body>
+</body>
+
 </html>
