@@ -82,6 +82,10 @@ mongoose.connect(uri)
       res.sendFile(path.join(__dirname, 'views/adminview', 'add_book.html'));
     });
 
+    app.get('/book_manager',authAdmin, (req, res) => {
+      res.sendFile(path.join(__dirname, 'views/adminview', 'book_manager.html'));
+    });
+
     // Định nghĩa route để tìm và truyền dữ liệu từ 2 bảng category + author vào thẻ select để thực hiện thêm sách
     app.get('/get_categories', async (req, res) => {
       try {
@@ -102,7 +106,8 @@ mongoose.connect(uri)
           res.status(500).send('Failed to fetch authors');
       }
     });
-    //
+
+    //Lấy tất cả các sách
     app.get('/get_books', async (req, res) => {
       try {
         const books = await Book.find();

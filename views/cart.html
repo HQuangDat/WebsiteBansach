@@ -209,7 +209,7 @@
         document.getElementById('total').innerText = `$${subtotal.toFixed(2)}`;
     }
 
-    // Check login status and update user menu
+    // Kiểm tra trạng thái login
     document.addEventListener("DOMContentLoaded", function () {
         fetch('/check_login')
             .then(response => response.json())
